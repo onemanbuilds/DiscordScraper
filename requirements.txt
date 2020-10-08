@@ -1,0 +1,9 @@
+requests
+json
+discord
+sys
+os
+discord_webhook
+discord
+colorama
+threading
