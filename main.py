@@ -21,24 +21,27 @@ class Main:
     def SetTitle(self,title_name:str):
         os.system("title {0}".format(title_name))
 
-    def PrintText(self,info_name,text,info_color:Fore,text_color:Fore):
-        lock = Lock()
-        lock.acquire()
-        sys.stdout.flush()
-        text = text.encode('ascii','replace').decode()
-        sys.stdout.write(f'[{info_color+info_name+Fore.RESET}] '+text_color+f'{text}\n')
-        lock.release()
-
     def __init__(self):
         self.clear()
         self.SetTitle('One Man Builds Discord Attachment Scraper Tool')
-
+        
+        title = Fore.YELLOW+"""
+                ___  _ ____ ____ ____ ____ ___     ____ ___ ___ ____ ____ _  _ _  _ ____ _  _ ___ 
+                |  \ | [__  |    |  | |__/ |  \    |__|  |   |  |__| |    |__| |\/| |___ |\ |  |  
+                |__/ | ___] |___ |__| |  \ |__/    |  |  |   |  |  | |___ |  | |  | |___ | \|  |  
+                                                                                                
+                                    ____ ____ ____ ____ ___  ____ ____                                                
+                                    [__  |    |__/ |__| |__] |___ |__/                                                
+                                    ___] |___ |  \ |  | |    |___ |  \                                                
+                                                                                                                    
+        """
+        print(title)
         with open('config.json','r') as f:
             config = json.load(f)
 
         self.token = config['token']
-        init()
-        self.download_attachments = int(input('[QUESTION] Would you like to download attachments [1] yes [0] no: '))
+        init(convert=True)
+        self.download_attachments = int(input(Fore.YELLOW+'['+Fore.WHITE+'>'+Fore.YELLOW+'] Would you like to download attachments [1] yes [0] no: '))
         self.bot = commands.Bot(command_prefix='$', self_bot=True)
 
     def Download(self,url):
@@ -48,14 +51,14 @@ class Main:
         filename = url.split('/')[-1]
         with open('Downloads/{0}'.format(filename),'wb') as f:
             f.write(response.content)
-        self.PrintText('DOWNLOADED',filename,Fore.GREEN,Fore.WHITE)
+        print(Fore.GREEN+'['+Fore.WHITE+'!'+Fore.GREEN+'] '+filename)
         lock.release()
 
     def Start(self):
         self.clear()
         @self.bot.event
         async def on_ready():
-            self.PrintText('LOGGED IN AS',self.bot.user.name,Fore.GREEN,Fore.WHITE)
+            print(Fore.GREEN+'['+Fore.WHITE+'!'+Fore.GREEN+'] LOGGED IN AS | '+self.bot.user.name)
 
         @self.bot.event
         async def on_message(message):
@@ -64,8 +67,7 @@ class Main:
 
                 with open('attachments.txt','a') as f:
                     f.write(url+'\n')
-
-                self.PrintText('ATTACHMENT',url,Fore.GREEN,Fore.WHITE)
+                print(Fore.GREEN+'['+Fore.WHITE+'!'+Fore.GREEN+'] ATTACHMENT | '+url)
                 if self.download_attachments == 1:
                     threading = Thread(target=self.Download,args=[url]).start()
                     
