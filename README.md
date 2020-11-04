@@ -1,6 +1,11 @@
 # DiscordAttachmentScraper
  Get's discord attachments url and downloads them if needed.
 
+# Installation
+```
+pip3 install -r requirements.txt
+``` 
+
 # Tool
 ![](https://i.ibb.co/RSTVk7s/tool.png)
 
